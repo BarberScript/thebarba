@@ -1,103 +1,98 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="calculator" />
-        <link rel="stylesheet" type="text/css" href="styles.css" />
-        <link rel="icon" href="favicon.ico" />
-        <link rel="apple-touch-icon" href="apple.ico" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta
-            name="apple-mobile-web-app-status-bar-style"
-            id="statusBarStyle"
-            content="white"
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="calculator" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="icon" href="favicon.ico" />
+    <link rel="apple-touch-icon" href="apple.ico" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      id="statusBarStyle"
+      content="white"
+    />
+    <!-- Здесь добавлен ID для удобства обращения из JavaScript -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Josefin+Slab:ital,wght@0,100..700;1,100..700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Happy Berry</title>
+  </head>
+  <body>
+    <header>
+      <!-- Одна из иконок, которая отображается по умолчанию -->
+      <img src="./logo.ico" alt="Theme Toggle" id="themeToggle" onclick="toggleTheme()" />
+    </header>
+
+    <main>
+      <div id="calculatorContainer">
+        <input
+          type="number"
+          id="sum"
+          class="styledInput"
+          placeholder="Total, work, work"
+          required
+          min="0"
         />
-        <!-- Здесь добавлен ID для удобства обращения из JavaScript -->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Josefin+Slab:ital,wght@0,100..700;1,100..700&display=swap"
-            rel="stylesheet"
+        <input
+          type="number"
+          id="additionalValue"
+          class="styledInput"
+          placeholder="Additional value"
+          required
+          min="0"
         />
-        <title>Happy Berry</title>
-    </head>
-    <body>
-        <header>
-            <!-- Одна из иконок, которая отображается по умолчанию -->
-            <img
-                src="./logo.ico"
-                alt="Theme Toggle"
-                id="themeToggle"
-                onclick="toggleTheme()"
-            />
-        </header>
+        <input
+          type="number"
+          id="hours"
+          class="styledInput"
+          placeholder="My busy hours, leave me alone!"
+          required
+          min="0"
+        />
+        <button
+          class="btn-magic"
+          id="rippleButton"
+          type="button"
+          onclick="calculateSalary()"
+        >
+          Okie Dokie
+        </button>
+      </div>
 
-        <main>
-            <div id="calculatorContainer">
-                <input
-                    type="number"
-                    id="sum"
-                    class="styledInput"
-                    placeholder="Total, work, work"
-                    required
-                    min="0"
-                />
-                <input
-                    type="number"
-                    id="additionalValue"
-                    class="styledInput"
-                    placeholder="Additional value"
-                    required
-                    min="0"
-                />
-                <input
-                    type="number"
-                    id="hours"
-                    class="styledInput"
-                    placeholder="My busy hours, leave me alone!"
-                    required
-                    min="0"
-                />
-                <button
-                    class="btn-magic"
-                    id="rippleButton"
-                    type="button"
-                    onclick="calculateSalary()"
-                >
-                    Okie Dokie
-                </button>
-            </div>
+      <div id="resultsContainer">
+        <ul id="resultsList"></ul>
+      </div>
+      <div id="resultsContainer2">
+        <ul id="resultsList2"></ul>
+      </div>
+      <div id="resultsContainer3">
+        <ul id="resultsList3"></ul>
+      </div>
 
-            <div id="resultsContainer">
-                <ul id="resultsList"></ul>
-            </div>
-            <div id="resultsContainer2">
-                <ul id="resultsList2"></ul>
-            </div>
-            <div id="resultsContainer3">
-                <ul id="resultsList3"></ul>
-            </div>
+      <div id="hourlySalaryResultContainer">
+        <p id="hourlySalaryResult1"></p>
+        <p id="hourlySalaryResult2"></p>
+      </div>
 
-            <div id="hourlySalaryResultContainer">
-                <p id="hourlySalaryResult1"></p>
-                <p id="hourlySalaryResult2"></p>
-            </div>
+      <div id="chartContainer">
+        <canvas id="myChart" width="400" height="200"></canvas>
+        <!--<button class="btn-magic" type="button" id="toggleChartButton" onclick="toggleChartType()">Toggle Chart Type</button>-->
+      </div>
+    </main>
 
-            <div id="chartContainer">
-                <canvas id="myChart" width="400" height="200"></canvas>
-                <!--<button class="btn-magic" type="button" id="toggleChartButton" onclick="toggleChartType()">Toggle Chart Type</button>-->
-            </div>
-        </main>
+    <footer>
+      <p class="copyright">Copyright @ BarberScript</p>
+    </footer>
 
-        <footer>
-            <p class="copyright">Copyright @ EnterTheGungeon</p>
-        </footer>
-
-        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-        <script src="script.js"></script>
-        <script src="supabase.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    </body>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="script.js"></script>
+    <script src="supabase.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </body>
 </html>
