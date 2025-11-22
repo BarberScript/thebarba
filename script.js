@@ -110,7 +110,7 @@ async function displayResults() {
   try {
     // Получение данных из базы данных Supabase
     const { data, error } = await supabaseClient
-      .from("happyberry")
+      .from("peon")
       .select("*")
       .order("id", { ascending: false })
       .limit(3);
@@ -260,7 +260,7 @@ function createChart(results) {
 
 async function fetchResults() {
   const { data, error } = await supabaseClient
-    .from("happyberry")
+    .from("peon")
     .select("sum, hours, result, date, ADtotal, additionalValue")
     .order("id", { ascending: false }) // Сортировка по ID в порядке возрастания
     .limit(10);
@@ -274,7 +274,7 @@ async function fetchResults() {
 
 async function updateChart() {
   const { data, error } = await supabaseClient
-    .from("happyberry")
+    .from("peon")
     .select("sum, hours, result, date, ADtotal, additionalValue")
     .order("id", { ascending: false }) // Сортировка по ID в порядке возрастания
     .limit(10);

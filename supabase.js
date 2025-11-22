@@ -23,7 +23,7 @@ async function saveDataToSupabase(
   const currentDate = new Date();
   const formattedDate = currentDate.toLocaleString();
 
-  const { data, error } = await supabaseClient.from("happyberry").upsert([
+  const { data, error } = await supabaseClient.from("peon").upsert([
     {
       sum,
       hours,
