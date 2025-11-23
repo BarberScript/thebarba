@@ -8,30 +8,7 @@ function showError() {
   });
 }
 
-function toggleTheme() {
-  const body = document.body;
-  const themeToggle = document.getElementById("themeToggle");
 
-  // Переключение темы
-  body.classList.toggle("dark-theme");
-
-  // Проверка текущей темы и изменение иконки
-  if (body.classList.contains("dark-theme")) {
-    themeToggle.src = "./logo-black.ico";
-  } else {
-    themeToggle.src = "./logo.ico";
-  }
-  // Получаем ссылку на мета-тег
-  const statusBarMeta = document.getElementById("statusBarStyle");
-
-  // Если тема светлая, устанавливаем стиль строки состояния черным
-  if (document.body.classList.contains("dark-theme")) {
-    statusBarMeta.setAttribute("content", "black");
-  } else {
-    // Если тема тёмная, устанавливаем стиль строки состояния белым
-    statusBarMeta.setAttribute("content", "white");
-  }
-}
 
 async function calculateSalary() {
   const sumInput = document.getElementById("sum").value;
@@ -97,6 +74,10 @@ async function calculateSalary() {
   );
   await fetchResults();
 
+  // Hide wizard steps and show results
+  // document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+  // document.getElementById('resultsArea').classList.remove('hidden');
+
   // После сохранения данных и получения новых данных из базы данных перезагружаем результаты и обновляем график
   displayResults();
   await updateChart();
@@ -153,13 +134,37 @@ async function displayResults() {
       }
 
       // Формирование содержимого элемента списка
-      listItem.innerHTML = `<strong>La casse</strong>: ${
-        entry.sum
-      }, <strong>Les heures</strong>: ${
-        entry.hours
-      }      <br><strong>La commission</strong>: ${entry.com.toFixed(2)}
-      <br><strong>Le salaire</strong>: ${entry.result.toFixed(2)}
-      <br><strong>La somme totale</strong>: ${entry.ADtotal.toFixed(2)}`;
+      // Формирование содержимого элемента списка
+      listItem.innerHTML = `
+        <div class="result-card">
+          <div class="result-row">
+            <div class="result-item">
+              <span class="result-label">LA CASSE</span>
+              <span class="result-value">${entry.sum}</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">LES HEURES</span>
+              <span class="result-value">${entry.hours}</span>
+            </div>
+          </div>
+          <div class="result-row">
+            <div class="result-item">
+              <span class="result-label">COMMISSION</span>
+              <span class="result-value">${entry.com.toFixed(2)}</span>
+            </div>
+            <div class="result-item highlight-cyan">
+              <span class="result-label">LE SALAIRE</span>
+              <span class="result-value">${entry.result.toFixed(2)}</span>
+            </div>
+          </div>
+          <div class="result-row full-width">
+            <div class="result-item highlight-purple">
+              <span class="result-label">SOMME TOTALE</span>
+              <span class="result-value">${entry.ADtotal.toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
+      `;
 
       if (index < 1) {
         resultsList.appendChild(listItem);
@@ -179,80 +184,69 @@ async function displayResults() {
 
 function createChart(results) {
   const labels = results.map(
-    (result) => `Total: ${result.sum}, Hours: ${result.hours}`,
+    (result) => new Date(result.date).toLocaleDateString()
   );
   const data = results.map((result) =>
-    result.result ? result.result.toFixed(2) : 0,
+    result.result ? result.result.toFixed(2) : 0
   );
-  const ADtotalData = results.map((result) =>
-    result.ADtotal ? result.ADtotal.toFixed(2) : 0,
-  );
-  const additionalValue = results.map((result) =>
-    result.additionalValue ? result.additionalValue.toFixed(2) : 0,
-  );
+
   const ctx = document.getElementById("myChart").getContext("2d");
+
+  // Create gradient
+  const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+  gradient.addColorStop(0, 'rgba(0, 243, 255, 0.5)');
+  gradient.addColorStop(1, 'rgba(0, 243, 255, 0)');
+
   if (typeof myChart === "object" && myChart !== null) {
     myChart.destroy();
   }
   myChart = new Chart(ctx, {
-    // Удалено ключевое слово const
     type: "line",
     data: {
       labels: labels,
       datasets: [
         {
-          label: "ZP",
+          label: "Salary",
           data: data,
-          fill: false,
+          fill: true,
+          backgroundColor: gradient,
           tension: 0.4,
-          borderColor: "#0284C7",
-          borderWidth: 3,
-          pointRadius: 5,
-        },
-        {
-          label: "Total",
-          data: ADtotalData,
-          fill: false,
-          tension: 0.4,
-          borderColor: "#FF5733",
-          borderWidth: 3,
-          pointRadius: 5,
-        },
-        {
-          label: "Chaj",
-          data: additionalValue,
-          fill: false,
-          tension: 0.4,
-          borderColor: "#F27702",
-          borderWidth: 3,
-          pointRadius: 5,
-        },
+          borderColor: "#00f3ff", // Cyan
+          borderWidth: 2,
+          pointRadius: 4,
+          pointBackgroundColor: "#fff",
+          pointBorderColor: "#00f3ff",
+        }
       ],
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           beginAtZero: true,
-          display: false,
-          ticks: {
-            display: false,
-          },
-          grid: {
-            display: false,
-            drawBorder: false,
-          },
+          display: true, // Show Y axis for value context
+          grid: { color: "rgba(255, 255, 255, 0.05)" },
+          ticks: { color: "rgba(255, 255, 255, 0.5)" }
         },
         x: {
-          display: false,
-          grid: {
-            display: true,
-          },
+          display: false, // Hide X axis labels to keep it clean
+          grid: { display: false },
         },
       },
       plugins: {
         legend: {
-          display: false,
+          display: false, // Hide legend since it's just one line
         },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          borderColor: 'rgba(255, 255, 255, 0.2)',
+          borderWidth: 1
+        }
       },
     },
   });
@@ -262,14 +256,96 @@ async function fetchResults() {
   const { data, error } = await supabaseClient
     .from("peon")
     .select("sum, hours, result, date, ADtotal, additionalValue")
-    .order("id", { ascending: false }) // Сортировка по ID в порядке возрастания
-    .limit(10);
+    .order("id", { ascending: false })
+    .limit(50); // Increased limit for stats
 
   if (error) {
     console.error("Error fetching data from Supabase:", error.message);
   } else {
-    createChart(data.reverse()); // Используйте метод reverse() для изменения порядка записей
+    const recentData = data.slice(0, 10);
+    createChart(recentData.reverse());
+    calculateStats(data);
   }
+}
+
+function calculateStats(data) {
+  if (!data || data.length === 0) return;
+
+  // Best and Worst Week
+  let maxResult = -Infinity;
+  let minResult = Infinity;
+  let bestWeek = null;
+  let worstWeek = null;
+
+  data.forEach((entry) => {
+    if (entry.result > maxResult) {
+      maxResult = entry.result;
+      bestWeek = entry;
+    }
+    if (entry.result < minResult) {
+      minResult = entry.result;
+      worstWeek = entry;
+    }
+  });
+
+  if (bestWeek) {
+    document.getElementById("bestWeek").textContent = `$${maxResult.toFixed(2)}`;
+    document.getElementById("bestWeekDate").textContent = new Date(bestWeek.date).toLocaleDateString();
+  }
+
+  if (worstWeek) {
+    document.getElementById("worstWeek").textContent = `$${minResult.toFixed(2)}`;
+    document.getElementById("worstWeekDate").textContent = new Date(worstWeek.date).toLocaleDateString();
+  }
+
+  // Vacation Recommendation (Lowest Average Month)
+  const monthTotals = {};
+  const monthCounts = {};
+
+  data.forEach((entry) => {
+    if (!entry.date) return;
+    const date = new Date(entry.date);
+    const month = date.toLocaleString("default", { month: "long" });
+
+    if (!monthTotals[month]) {
+      monthTotals[month] = 0;
+      monthCounts[month] = 0;
+    }
+    monthTotals[month] += entry.result;
+    monthCounts[month]++;
+  });
+
+  let minAvg = Infinity;
+  let worstMonth = "N/A";
+
+  for (const month in monthTotals) {
+    const avg = monthTotals[month] / monthCounts[month];
+    if (avg < minAvg) {
+      minAvg = avg;
+      worstMonth = month;
+    }
+  }
+
+  // Profit Trend Calculation
+  if (data.length >= 2) {
+    const current = data[0].result;
+    const previous = data[1].result;
+    const diff = current - previous;
+    const trendElement = document.getElementById("profitTrend");
+
+    if (diff > 0) {
+      trendElement.innerHTML = `+$${diff.toFixed(2)} <span style="color: #00ff9d;">&#8593;</span>`;
+    } else if (diff < 0) {
+      trendElement.innerHTML = `-$${Math.abs(diff).toFixed(2)} <span style="color: #ff4d4d;">&#8595;</span>`;
+    } else {
+      trendElement.innerHTML = `$0.00 <span>-</span>`;
+    }
+  } else {
+    const trendElement = document.getElementById("profitTrend");
+    if (trendElement) trendElement.textContent = "N/A";
+  }
+
+  document.getElementById("vacationRec").textContent = worstMonth.toUpperCase();
 }
 
 async function updateChart() {
@@ -285,6 +361,7 @@ async function updateChart() {
     createChart(data.reverse()); // обращаем массив данных перед созданием графика
   }
 }
+
 window.onload = function () {
   fetchResults();
 };
