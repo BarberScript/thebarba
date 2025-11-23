@@ -15,40 +15,22 @@ body {
   align-items: center;
   padding: 20px;
   color: #fff;
+  overflow-x: hidden; /* Disable horizontal scroll */
 }
 
-#bgCanvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-}
-
-header {
-  margin-bottom: 20px;
-}
-
-#themeToggle {
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-  filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
-  display: none;
-}
+/* ... existing code ... */
 
 .neon-title {
   font-family: 'Quicksand', sans-serif;
   font-weight: 700;
   font-size: 2.5rem;
   color: #fff;
+  /* Downward casting glow */
   text-shadow: 
     0 0 5px #fff,
-    0 0 10px #fff,
-    0 0 20px #00f3ff,
-    0 0 30px #00f3ff,
-    0 0 40px #00f3ff;
+    0 10px 20px #00f3ff,
+    0 20px 40px #00f3ff,
+    0 40px 80px #00f3ff;
   letter-spacing: 5px;
   margin: 0;
   animation: flicker 7s infinite alternate;
@@ -58,51 +40,51 @@ header {
   0%, 18%, 22%, 25%, 53%, 57%, 100% {
     text-shadow:
       0 0 4px #fff,
-      0 0 11px #fff,
-      0 0 19px #fff,
-      0 0 40px #00f3ff,
-      0 0 80px #00f3ff,
-      0 0 90px #00f3ff,
-      0 0 100px #00f3ff,
-      0 0 150px #00f3ff;
+      0 10px 20px #00f3ff,
+      0 20px 40px #00f3ff,
+      0 40px 80px #00f3ff,
+      0 80px 160px #00f3ff;
   }
   20%, 24%, 55% {
     text-shadow: none;
   }
 }
 
-/* Glassmorphism Container */
+/* Glassmorphism Container - Now Transparent */
 .glass-container {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+  animation: none;
+  width: 100%;
+  max-width: 390px;
+  padding: 10px;
+  margin: 0 auto;
+}
+
+/* Common Glass Effect for Elements */
+.neon-input,
+#statsContainer,
+#chartContainer,
+li {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  width: 90%; /* Changed from 100% to 90% to prevent edge touching */
-  max-width: 450px; /* Slightly reduced max-width for better mobile view */
-  padding: 30px; /* Reduced padding slightly */
   border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-  position: relative;
-  overflow: hidden;
-  transition: height 0.5s ease;
-  animation: breathe 4s ease-in-out infinite;
-  margin: 0 auto; /* Center the container */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* ... existing code ... */
-
-.stat-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 0; /* Increased padding for better spacing */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-@keyframes breathe {
-  0% { box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); }
-  50% { box-shadow: 0 4px 30px rgba(0, 243, 255, 0.2); }
-  100% { box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); }
+/* Hover effect for glass elements */
+.neon-input:focus,
+li:hover,
+#statsContainer:hover,
+#chartContainer:hover {
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+  border-color: rgba(0, 243, 255, 0.3);
 }
 
 /* Input Group */
@@ -114,8 +96,8 @@ header {
 }
 
 label {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
+  font-size: 1.2rem; /* Slightly smaller label */
+  margin-bottom: 10px;
   color: #fff;
   text-align: center;
   font-weight: 500;
@@ -124,25 +106,20 @@ label {
   text-shadow: 0 0 10px rgba(255,255,255,0.3);
 }
 
-/* Neon Input */
+/* Neon Input Specifics */
 .neon-input {
   width: 100%;
   padding: 15px;
   font-size: 1.2rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.2);
   color: #fff;
   outline: none;
-  transition: all 0.3s ease;
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 0; /* Margin handled by input-group */
 }
 
 .neon-input:focus {
-  border-color: #00f3ff;
-  box-shadow: 0 0 15px rgba(0, 243, 255, 0.5), inset 0 0 5px rgba(0, 243, 255, 0.2);
-  background: rgba(0, 0, 0, 0.4);
+  /* Focus styles handled by common hover/focus block above + specific glow */
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
 }
 
 .neon-input::placeholder {
@@ -205,12 +182,12 @@ label {
 
 ul {
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 li {
   padding: 0; /* Reset padding */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 1rem;
   color: #fff;
   background: rgba(0, 0, 0, 0.3);
   margin-bottom: 15px;
